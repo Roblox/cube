@@ -135,7 +135,7 @@ class OneDEncoder(nn.Module):
 
         init_tfixup(self, num_layers)
 
-    @torch.compile(fullgraph=True) if sys.platform == "linux" else lambda x: x
+    @torch.compile(fullgraph=True) if 'inductor' in torch._dynamo.list_backends() else lambda x: x
     def _forward(self, h, data, attn_mask=None):
         """
         Forward pass for the autoencoder model.
@@ -268,7 +268,8 @@ class OneDDecoder(nn.Module):
 
         init_tfixup(self, num_layers)
 
-    @torch.compile(fullgraph=True) if sys.platform == "linux" else lambda x: x
+    
+    @torch.compile(fullgraph=True) if 'inductor' in torch._dynamo.list_backends() else lambda x: x
     def _forward(self, h):
         """
         Applies a sequence of operations to the input tensor `h` using the blocks
