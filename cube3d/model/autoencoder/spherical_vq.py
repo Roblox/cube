@@ -62,7 +62,7 @@ class SphericalVectorQuantizer(nn.Module):
         return self.norm(self.cb_norm(self.codebook.weight))
 
     @torch.no_grad()
-    @torch.compile(fullgraph=True) if sys.platform == "linux" else lambda x: x
+
     def lookup_codebook(self, q: torch.Tensor):
         """
         Perform a lookup in the codebook and process the result.
