@@ -63,7 +63,6 @@ class SphericalVectorQuantizer(nn.Module):
 
     @torch.no_grad()
 
-    @torch.compile(fullgraph=True) if 'inductor' in torch._dynamo.list_backends() else lambda x: x
     def lookup_codebook(self, q: torch.Tensor):
         """
         Perform a lookup in the codebook and process the result.
