@@ -20,8 +20,14 @@ def generate_mesh(
     output_name,
     resolution_base=8.0,
     disable_postprocess=False,
+    top_k: int = 0,
 ):
-    mesh_v_f = engine.t2s([prompt], use_kv_cache=True, resolution_base=resolution_base)
+    mesh_v_f = engine.t2s(
+        [prompt],
+        use_kv_cache=True,
+        resolution_base=resolution_base,
+        top_k=top_k,
+    )
     vertices, faces = mesh_v_f[0][0], mesh_v_f[0][1]
     obj_path = os.path.join(output_dir, f"{output_name}.obj")
     if PYMESHLAB_AVAILABLE:
@@ -81,6 +87,12 @@ if __name__ == "__main__":
         help="Text prompt for generating a 3D mesh",
     )
     parser.add_argument(
+        "--top-k",
+        type=int,
+        default=1,
+        help="Top k filtering, 0 means no filtering, by default 1, which is determistic.",
+    )
+    parser.add_argument(
         "--render-gif",
         help="Render a turntable gif of the mesh",
         default=False,
@@ -102,7 +114,6 @@ if __name__ == "__main__":
     os.makedirs(args.output_dir, exist_ok=True)
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     print(f"Using device: {device}")
-
     # Initialize engine based on fast_inference flag
     if args.fast_inference:
         print(
@@ -116,7 +127,7 @@ if __name__ == "__main__":
         engine = Engine(
             args.config_path, args.gpt_ckpt_path, args.shape_ckpt_path, device=device
         )
-
+    
     # Generate meshes based on input source
     obj_path = generate_mesh(
         engine,
@@ -125,6 +136,7 @@ if __name__ == "__main__":
         "output",
         args.resolution_base,
         args.disable_postprocessing,
+        args.top_k,
     )
     if args.render_gif:
         gif_path = renderer.render_turntable(obj_path, args.output_dir)

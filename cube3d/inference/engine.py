@@ -2,6 +2,7 @@ import torch
 from tqdm import tqdm
 from transformers import CLIPTextModelWithProjection, CLIPTokenizerFast
 
+from cube3d.inference.logits_postprocesses import process_logits
 from cube3d.inference.utils import load_config, load_model_weights, parse_structured
 from cube3d.model.autoencoder.one_d_autoencoder import OneDAutoEncoder
 from cube3d.model.gpt.dual_stream_roformer import DualStreamRoformer
@@ -159,6 +160,7 @@ class Engine:
         prompts: list[str],
         use_kv_cache: bool,
         guidance_scale: float = 3.0,
+        top_k: int = 1,
     ):
         """
         Generates text using a GPT model based on the provided prompts.
@@ -166,6 +168,7 @@ class Engine:
             prompts (list[str]): A list of input prompts to generate text from.
             use_kv_cache (bool): Whether to use key-value caching for faster generation.
             guidance_scale (float, optional): The scale for guidance during generation. Default is 3.0.
+            top_k : (int, optional): Top k filtering, 0 means no filtering, by default 1.
         Returns:
             torch.Tensor: A tensor containing the generated token IDs.
         """
@@ -212,7 +215,11 @@ class Engine:
                         guidance_scale * (self.max_new_tokens - i) / self.max_new_tokens
                     )
                     logits = (1 + gamma) * logits - gamma * uncond_logits
-                next_id = torch.argmax(logits, dim=-1, keepdim=True)
+                probs = process_logits(
+                    logits,
+                    top_k=top_k,
+                )
+                next_id = torch.multinomial(probs, num_samples=1, replacement=True)
                 output_ids.append(next_id)
                 next_embed = self.gpt_model.encode_token(next_id)
                 if guidance_scale > 0.0:
@@ -259,6 +266,7 @@ class Engine:
         guidance_scale: float = 3.0,
         resolution_base: float = 8.0,
         chunk_size: int = 100_000,
+        top_k: int = 5,
     ):
         """
         Generates a 3D mesh from text prompts using a GPT model and shape decoder.
@@ -271,7 +279,7 @@ class Engine:
         Returns:
             mesh_v_f: The generated 3D mesh vertices and faces.
         """
-        output_ids = self.run_gpt(prompts, use_kv_cache, guidance_scale)
+        output_ids = self.run_gpt(prompts, use_kv_cache, guidance_scale, top_k)
         with torch.autocast(self.device.type, dtype=torch.bfloat16):
             mesh_v_f = self.run_shape_decode(output_ids, resolution_base, chunk_size)
         return mesh_v_f
@@ -414,7 +422,11 @@ class EngineFast(Engine):
         )
 
     def run_gpt(
-        self, prompts: list[str], use_kv_cache: bool, guidance_scale: float = 3.0
+        self, 
+        prompts: list[str], 
+        use_kv_cache: bool, 
+        guidance_scale: float = 3.0,
+        top_k: int = 0,
     ):
         """
         Runs the GPT model to generate text based on the provided prompts.
@@ -452,7 +464,9 @@ class EngineFast(Engine):
                 logits, uncond_logits = logits.float().chunk(2, dim=0)
                 gamma = guidance_scale
                 logits = (1 + gamma) * logits - gamma * uncond_logits
-            next_id = torch.argmax(logits, dim=-1, keepdim=True)
+
+            probs = process_logits(logits, top_k=top_k)
+            next_id = torch.multinomial(probs, num_samples=1, replacement=True)
 
             output_ids[:, 0] = next_id.squeeze()
             next_embed = self.gpt_model.encode_token(next_id)
@@ -474,7 +488,8 @@ class EngineFast(Engine):
                         guidance_scale * (self.max_new_tokens - i) / self.max_new_tokens
                     )
                     logits = (1 + gamma) * logits - gamma * uncond_logits
-                next_id = torch.argmax(logits, dim=-1, keepdim=True)
+                probs = process_logits(logits, top_k=top_k)
+                next_id = torch.multinomial(probs, num_samples=1, replacement=True)
 
                 output_ids[:, i] = next_id.squeeze()
                 next_embed = self.gpt_model.encode_token(next_id)
