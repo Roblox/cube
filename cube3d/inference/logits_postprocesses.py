@@ -26,7 +26,7 @@ def top_k_filtering(logits, top_k: int = 0):
 
 def process_logits(
         logits,
-        top_k: int = 0,
+        top_k: int = 1,
     ):
     """
     Process logits by optionally applying top-k filtering.

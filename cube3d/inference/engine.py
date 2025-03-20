@@ -426,7 +426,7 @@ class EngineFast(Engine):
         prompts: list[str], 
         use_kv_cache: bool, 
         guidance_scale: float = 3.0,
-        top_k: int = 0,
+        top_k: int = 1,
     ):
         """
         Runs the GPT model to generate text based on the provided prompts.

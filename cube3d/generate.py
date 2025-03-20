@@ -20,7 +20,7 @@ def generate_mesh(
     output_name,
     resolution_base=8.0,
     disable_postprocess=False,
-    top_k: int = 0,
+    top_k: int = 1,
 ):
     mesh_v_f = engine.t2s(
         [prompt],
