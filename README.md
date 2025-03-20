@@ -36,18 +36,24 @@ cd cube
 pip install -e .[meshlab]
 ```
 
-> **CUDA**: If you are using a Windows machine, you may need to install the [CUDA](https://developer.nvidia.com/cuda-downloads) toolkit as well as the torch with cuda support via `pip install torch --index-url https://download.pytorch.org/whl/cu124 --force-reinstall`
+> **CUDA**: If you are using a Windows machine, you may need to install the [CUDA](https://developer.nvidia.com/cuda-downloads) toolkit as well as `torch` with cuda support via `pip install torch --index-url https://download.pytorch.org/whl/cu124 --force-reinstall`
 
-> **Note**:  The `[meshlab]` is an optional dependency and can be removed by simply running `pip install -e .` for better compatibility but mesh simplification will be disabled.
+> **Note**: `[meshlab]` is an optional dependency and can be removed by simply running `pip install -e .` for better compatibility but mesh simplification will be disabled.
 
 ### Download Models from Huggingface 🤗
 
-You can download the model weights from [here](https://huggingface.co/Roblox/cube3d-v0.1) or use the
-`huggingface-cli` command to download the model weights.
+Download the model weights from [hugging face](https://huggingface.co/Roblox/cube3d-v0.1) or use the
+`huggingface-cli`:
 
 ```bash
 huggingface-cli download Roblox/cube3d-v0.1 --local-dir ./model_weights
 ```
+
+### Hardware Requirements
+
+We have tested our model on Nvidia H100 GPU, Nvidia A100 GPU, Nvidia Geforce
+3080, and Apple Silicon M Chips. We recommend using a GPU with at least 24GB of
+VRAM available. 
 
 ### Inference
 
@@ -90,7 +96,7 @@ This will process the `.obj` file located at `./outputs/output.obj` and prints t
 
 ### Code Usage
 
-We designed a minimalist API that allows you to use this repo as a Python library:
+We have designed a minimalist API that allows the use this repo as a Python library:
 
 ```python
 import torch
@@ -119,7 +125,7 @@ trimesh.Trimesh(vertices=vertices, faces=faces).export("output.obj")
 
 ## Coming Soon
 
-### Controlling shape generation with bounding box conditioning
+**Controlling shape generation with bounding box conditioning**
 <div align="center">
   <img src="./resources/truck-bbox.gif" width="300" height="300" style="margin: 5px;"><br/>
   "a semi truck"
