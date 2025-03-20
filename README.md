@@ -124,11 +124,14 @@ engine_fast = EngineFast( # only supported on CUDA devices, replace with Engine 
 # inference
 input_prompt = "A pair of noise-canceling headphones"
 # NOTE: Reduce `resolution_base` for faster inference and lower VRAM usage
-mesh_v_f = engine_fast.t2s([input_prompt], use_kv_cache=True, resolution_base=8.0)
+# The `top_k` parameter controls randomness between inferences:
+#   - A value of 1 yields deterministic results.
+#   - Higher values introduce more randomness.
+mesh_v_f = engine_fast.t2s([input_prompt], use_kv_cache=True, resolution_base=8.0, top_k=5)
 
 # save output
 vertices, faces = mesh_v_f[0][0], mesh_v_f[0][1]
-trimesh.Trimesh(vertices=vertices, faces=faces).export("output.obj")
+_ = trimesh.Trimesh(vertices=vertices, faces=faces).export("output.obj")
 ```
 
 ## Coming Soon
