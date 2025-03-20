@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 
 
-def top_k_filtering(logits, top_k: int = 0):
+def top_k_filtering(logits, top_k: int = 1):
     """
     Filter a distribution of logits using top-k and/or top-p (nucleus) filtering.
     The input logits tensor is modified in-place.
