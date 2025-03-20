@@ -130,15 +130,10 @@ trimesh.Trimesh(vertices=vertices, faces=faces).export("output.obj")
 
 ## Coming Soon
 
-**Controlling shape generation with bounding box conditioning**
+### Controlling shape generation with bounding box conditioning
 <div align="center">
-  <img src="./resources/truck-bbox.gif" width="300" height="300" style="margin: 5px;"><br/>
-  "a semi truck"
-</div>
-<br/>
-<div align="center">
-  <img src="./resources/couch-bbox.gif" width="300" height="300" style="margin: 5px;"><br/>
-  "vintage couch"
+  <img src="./resources/truck_black_text_512.gif" width="300" height="300" style="margin: 5px;">
+  <img src="./resources/couch_black_text_512.gif" width="300" height="300" style="margin: 5px;">
 </div>
 
 ### Scene Generation
