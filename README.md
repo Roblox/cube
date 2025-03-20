@@ -27,7 +27,10 @@ towards this vision, we hope to engage others in the research community to addre
 
 Cube 3D is our first step towards 3D intelligence, which involves a shape tokenizer and a text-to-shape generation model. We are unlocking the power of generating 3D assets and enhancing creativity for all artists. Our latest version of Cube 3D is now accessible to individuals, creators, researchers and businesses of all sizes so that they can experiment, innovate and scale their ideas responsibly. This release includes model weights and starting code for using our text-to-shape model to create 3D assets.
 
-### Try it out on [Google Colab](https://colab.research.google.com/drive/1ZvTj49pjDCD_crX5WPZNTAoTTzL6-E5t)
+### Try it out on 
+
+- [Google Colab](https://colab.research.google.com/drive/1ZvTj49pjDCD_crX5WPZNTAoTTzL6-E5t)
+- [Hugging Face Interactive Demo](https://huggingface.co/spaces/Roblox/cube3d-interactive)
 
 ### Install Requirements
 
