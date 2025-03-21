@@ -266,7 +266,7 @@ class Engine:
         guidance_scale: float = 3.0,
         resolution_base: float = 8.0,
         chunk_size: int = 100_000,
-        top_k: int = 5,
+        top_k: int = 1,
     ):
         """
         Generates a 3D mesh from text prompts using a GPT model and shape decoder.
