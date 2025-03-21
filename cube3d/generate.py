@@ -90,7 +90,7 @@ if __name__ == "__main__":
         "--top-k",
         type=int,
         default=1,
-        help="Top k filtering, 0 means no filtering, by default 1, which is determistic.",
+        help="Top k filtering, 0 means no filtering, by default 1, which is deterministic.",
     )
     parser.add_argument(
         "--render-gif",

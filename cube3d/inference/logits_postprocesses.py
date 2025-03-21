@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 def top_k_filtering(logits, top_k: int = 1):
     """
-    Filter a distribution of logits using top-k and/or top-p (nucleus) filtering.
+    Filter a distribution of logits using top-k filtering.
     The input logits tensor is modified in-place.
 
     Args:
@@ -12,7 +12,7 @@ def top_k_filtering(logits, top_k: int = 1):
         top_k: If > 0, only keep the top k tokens with highest probability.
 
     Returns:
-        A tensor of logits where values outside the top-k/top-p threshold are set to -∞.
+        A tensor of logits where values outside the top-k threshold are set to -∞.
     """
     if top_k > 0:
         idx_to_remove = logits < logits.topk(top_k, largest=True, sorted=False, dim=-1)[

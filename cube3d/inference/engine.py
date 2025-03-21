@@ -276,6 +276,7 @@ class Engine:
             guidance_scale (float, optional): The scale of guidance for the GPT model. Default is 3.0.
             resolution_base (float, optional): The base resolution for the shape decoder. Default is 8.0.
             chunk_size (int, optional): The chunk size for processing the shape decoding. Default is 100,000.
+            top_k (int, optional): Top k filtering, 0 means no filtering, by default 1, which is deterministic.
         Returns:
             mesh_v_f: The generated 3D mesh vertices and faces.
         """
@@ -434,6 +435,7 @@ class EngineFast(Engine):
             prompts (list[str]): A list of input prompts for the GPT model. Only a single prompt is supported.
             use_kv_cache (bool): Flag indicating whether to use key-value caching. (Currently not used)
             guidance_scale (float, optional): The scale factor for guidance. Default is 3.0.
+            top_k (int, optinal): Top k filtering, 0 means no filtering, by default 1, which is deterministic.
         Returns:
             torch.Tensor: A tensor containing the generated output token IDs.
         Raises:
