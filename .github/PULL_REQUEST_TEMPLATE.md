@@ -12,8 +12,9 @@ Fixes #XXX
 <!-- Any extra info, dependencies, or migration steps required -->
 - Any new dependencies added?
 - Any breaking changes introduced?
+- Testing instructions
 
 ## ✅ Checklist
 <!-- Ensure the following before submitting your PR -->
-- [ ] Test the changes
+- [ ] Provide test instructions
 - [ ] Update relevant documentation
