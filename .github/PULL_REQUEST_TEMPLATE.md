@@ -5,16 +5,16 @@
 <!-- Link any related issues using `Fixes #issue_number` or `Closes #issue_number` -->
 Fixes #XXX
 
-## 🛠 Screenshots
-<!-- Add screenshots or GIFs if the change affects the result -->
+## 🛠 Testing instructions
+<!-- Provide testing instructions for your PR -->
 
-## 📖 Additional Notes
+## 📖 📷 Additional context
 <!-- Any extra info, dependencies, or migration steps required -->
 - Any new dependencies added?
 - Any breaking changes introduced?
-- Testing instructions
+- Screenshots?
 
 ## ✅ Checklist
 <!-- Ensure the following before submitting your PR -->
-- [ ] Provide test instructions
+- [ ] Provide testing instructions
 - [ ] Update relevant documentation
