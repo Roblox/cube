@@ -8,6 +8,7 @@
   <a href=https://corp.roblox.com/newsroom/2025/03/introducing-roblox-cube target="_blank"><img src=https://img.shields.io/badge/Roblox-Blog-000000.svg?logo=Roblox height=22px></a>
   <a href=https://huggingface.co/Roblox/cube3d-0.1 target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Models-d96902.svg height=22px></a>
   <a href=https://arxiv.org/abs/2503.15475 target="_blank"><img src=https://img.shields.io/badge/ArXiv-Report-b5212f.svg?logo=arxiv height=22px></a>
+  <a href=https://colab.research.google.com/drive/1ZvTj49pjDCD_crX5WPZNTAoTTzL6-E5t target="_blank"><img src=https://img.shields.io/badge/Google-Open_In_Colab-blue.svg?logo=googlecolab height=22px></a>
 </div>
 
 
@@ -25,6 +26,11 @@ towards this vision, we hope to engage others in the research community to addre
 </p>
 
 Cube 3D is our first step towards 3D intelligence, which involves a shape tokenizer and a text-to-shape generation model. We are unlocking the power of generating 3D assets and enhancing creativity for all artists. Our latest version of Cube 3D is now accessible to individuals, creators, researchers and businesses of all sizes so that they can experiment, innovate and scale their ideas responsibly. This release includes model weights and starting code for using our text-to-shape model to create 3D assets.
+
+### Try it out on 
+
+- [Google Colab](https://colab.research.google.com/drive/1ZvTj49pjDCD_crX5WPZNTAoTTzL6-E5t)
+- [Hugging Face Interactive Demo](https://huggingface.co/spaces/Roblox/cube3d-interactive)
 
 ### Install Requirements
 
@@ -121,11 +127,14 @@ engine_fast = EngineFast( # only supported on CUDA devices, replace with Engine 
 # inference
 input_prompt = "A pair of noise-canceling headphones"
 # NOTE: Reduce `resolution_base` for faster inference and lower VRAM usage
-mesh_v_f = engine_fast.t2s([input_prompt], use_kv_cache=True, resolution_base=8.0)
+# The `top_k` parameter controls randomness between inferences:
+#   - A value of 1 yields deterministic results.
+#   - Higher values introduce more randomness.
+mesh_v_f = engine_fast.t2s([input_prompt], use_kv_cache=True, resolution_base=8.0, top_k=5)
 
 # save output
 vertices, faces = mesh_v_f[0][0], mesh_v_f[0][1]
-trimesh.Trimesh(vertices=vertices, faces=faces).export("output.obj")
+_ = trimesh.Trimesh(vertices=vertices, faces=faces).export("output.obj")
 ```
 
 ## Coming Soon
