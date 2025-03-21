@@ -160,7 +160,7 @@ class Engine:
         prompts: list[str],
         use_kv_cache: bool,
         guidance_scale: float = 3.0,
-        top_k: int = 1,
+        top_p: float = None,
     ):
         """
         Generates text using a GPT model based on the provided prompts.
@@ -168,7 +168,8 @@ class Engine:
             prompts (list[str]): A list of input prompts to generate text from.
             use_kv_cache (bool): Whether to use key-value caching for faster generation.
             guidance_scale (float, optional): The scale for guidance during generation. Default is 3.0.
-            top_k : (int, optional): Top k filtering, 0 means no filtering, by default 1.
+            top_p (float, optional): The cumulative probability threshold for nucleus sampling.
+            If None, argmax selection is performed (deterministic generation). Otherwise, smallest set of tokens with cumulative probability ≥ top_p are kept (stochastic generation).
         Returns:
             torch.Tensor: A tensor containing the generated token IDs.
         """
@@ -215,11 +216,10 @@ class Engine:
                         guidance_scale * (self.max_new_tokens - i) / self.max_new_tokens
                     )
                     logits = (1 + gamma) * logits - gamma * uncond_logits
-                probs = process_logits(
+                next_id = process_logits(
                     logits,
-                    top_k=top_k,
+                    top_p=top_p,
                 )
-                next_id = torch.multinomial(probs, num_samples=1, replacement=True)
                 output_ids.append(next_id)
                 next_embed = self.gpt_model.encode_token(next_id)
                 if guidance_scale > 0.0:
@@ -266,7 +266,7 @@ class Engine:
         guidance_scale: float = 3.0,
         resolution_base: float = 8.0,
         chunk_size: int = 100_000,
-        top_k: int = 1,
+        top_p: float = None,
     ):
         """
         Generates a 3D mesh from text prompts using a GPT model and shape decoder.
@@ -276,10 +276,12 @@ class Engine:
             guidance_scale (float, optional): The scale of guidance for the GPT model. Default is 3.0.
             resolution_base (float, optional): The base resolution for the shape decoder. Default is 8.0.
             chunk_size (int, optional): The chunk size for processing the shape decoding. Default is 100,000.
+            top_p (float, optional): The cumulative probability threshold for nucleus sampling. 
+                                    If None, argmax selection is performed (deterministic generation). Otherwise, smallest set of tokens with cumulative probability ≥ top_p are kept (stochastic generation).
         Returns:
             mesh_v_f: The generated 3D mesh vertices and faces.
         """
-        output_ids = self.run_gpt(prompts, use_kv_cache, guidance_scale, top_k)
+        output_ids = self.run_gpt(prompts, use_kv_cache, guidance_scale, top_p)
         with torch.autocast(self.device.type, dtype=torch.bfloat16):
             mesh_v_f = self.run_shape_decode(output_ids, resolution_base, chunk_size)
         return mesh_v_f
@@ -426,7 +428,7 @@ class EngineFast(Engine):
         prompts: list[str], 
         use_kv_cache: bool, 
         guidance_scale: float = 3.0,
-        top_k: int = 1,
+        top_p: float = None
     ):
         """
         Runs the GPT model to generate text based on the provided prompts.
@@ -434,6 +436,8 @@ class EngineFast(Engine):
             prompts (list[str]): A list of input prompts for the GPT model. Only a single prompt is supported.
             use_kv_cache (bool): Flag indicating whether to use key-value caching. (Currently not used)
             guidance_scale (float, optional): The scale factor for guidance. Default is 3.0.
+            top_p (float, optional): The cumulative probability threshold for nucleus sampling.
+            If None, argmax selection is performed. Otherwise, smallest set of tokens with cumulative probability ≥ top_p are kept.
         Returns:
             torch.Tensor: A tensor containing the generated output token IDs.
         Raises:
@@ -464,9 +468,7 @@ class EngineFast(Engine):
                 logits, uncond_logits = logits.float().chunk(2, dim=0)
                 gamma = guidance_scale
                 logits = (1 + gamma) * logits - gamma * uncond_logits
-
-            probs = process_logits(logits, top_k=top_k)
-            next_id = torch.multinomial(probs, num_samples=1, replacement=True)
+            next_id = process_logits(logits, top_p=top_p)
 
             output_ids[:, 0] = next_id.squeeze()
             next_embed = self.gpt_model.encode_token(next_id)
@@ -488,8 +490,7 @@ class EngineFast(Engine):
                         guidance_scale * (self.max_new_tokens - i) / self.max_new_tokens
                     )
                     logits = (1 + gamma) * logits - gamma * uncond_logits
-                probs = process_logits(logits, top_k=top_k)
-                next_id = torch.multinomial(probs, num_samples=1, replacement=True)
+                next_id = process_logits(logits, top_p=top_p)
 
                 output_ids[:, i] = next_id.squeeze()
                 next_embed = self.gpt_model.encode_token(next_id)

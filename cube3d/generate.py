@@ -20,13 +20,13 @@ def generate_mesh(
     output_name,
     resolution_base=8.0,
     disable_postprocess=False,
-    top_k: int = 1,
+    top_p=None,
 ):
     mesh_v_f = engine.t2s(
         [prompt],
         use_kv_cache=True,
         resolution_base=resolution_base,
-        top_k=top_k,
+        top_p=top_p,
     )
     vertices, faces = mesh_v_f[0][0], mesh_v_f[0][1]
     obj_path = os.path.join(output_dir, f"{output_name}.obj")
@@ -87,10 +87,10 @@ if __name__ == "__main__":
         help="Text prompt for generating a 3D mesh",
     )
     parser.add_argument(
-        "--top-k",
-        type=int,
-        default=1,
-        help="Top k filtering, 0 means no filtering, by default 1, which is determistic.",
+        "--top-p",
+        type=float,
+        default=None,
+        help="Float < 1: Keep smallest set of tokens with cumulative probability ≥ top_p. Default None: deterministic generation.",
     )
     parser.add_argument(
         "--render-gif",
@@ -136,7 +136,7 @@ if __name__ == "__main__":
         "output",
         args.resolution_base,
         args.disable_postprocessing,
-        args.top_k,
+        args.top_p,
     )
     if args.render_gif:
         gif_path = renderer.render_turntable(obj_path, args.output_dir)
