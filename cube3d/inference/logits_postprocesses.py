@@ -10,7 +10,6 @@ def top_k_filtering(logits, top_k: int = 1):
     Args:
         logits: A tensor of logits to be filtered. Expected shape is [..., vocab_size].
         top_k: If > 0, only keep the top k tokens with highest probability.
-        top_p: If < 1.0, only keep tokens whose cumulative probability is below this threshold.
 
     Returns:
         A tensor of logits where values outside the top-k/top-p threshold are set to -∞.
