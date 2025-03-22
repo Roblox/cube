@@ -304,6 +304,10 @@ class EngineFast(Engine):
             device (torch.device): The device to run the inference on (e.g., CPU or CUDA).
         """
 
+        assert (
+            device.type == "cuda"
+        ), "EngineFast is only supported on cuda devices, please use Engine on non-cuda devices"
+
         super().__init__(config_path, gpt_ckpt_path, shape_ckpt_path, device)
 
         # CUDA Graph params
