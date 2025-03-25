@@ -45,6 +45,8 @@ pip install -e .[meshlab]
 
 > **CUDA**: If you are using a Windows machine, you may need to install the [CUDA](https://developer.nvidia.com/cuda-downloads) toolkit as well as `torch` with cuda support via `pip install torch --index-url https://download.pytorch.org/whl/cu124 --force-reinstall`
 
+> **MacOS**: Systems with Apple Silicon or AMD GPUs can leverage the Metal Performance Shaders (MPS) backend for PyTorch.
+
 > **Note**: `[meshlab]` is an optional dependency and can be removed by simply running `pip install -e .` for better compatibility but mesh simplification will be disabled.
 
 ### Download Models from Huggingface 🤗
@@ -122,7 +124,7 @@ engine_fast = EngineFast( # only supported on CUDA devices, replace with Engine 
     config_path, 
     gpt_ckpt_path, 
     shape_ckpt_path, 
-    device=torch.device("cuda"),
+    device=torch.device("cuda"), # Replace with "mps" on Metal-compatible devices
 )
 
 # inference
