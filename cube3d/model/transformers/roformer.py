@@ -115,8 +115,7 @@ class SelfAttentionWithRotaryEmbedding(nn.Module):
                 kv_cache.value_states[:, :, : k.shape[2], :].copy_(v)
             else:
                 assert curr_pos_id is not None
-                kv_cache.key_states.index_copy_(2, curr_pos_id, k)
-                kv_cache.value_states.index_copy_(2, curr_pos_id, v)
+                kv_cache.update(curr_pos_id, k, v)
             k = kv_cache.key_states
             v = kv_cache.value_states
 
