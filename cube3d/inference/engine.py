@@ -19,20 +19,25 @@ class Engine(
     coders={
         DictConfig: (
             lambda x: OmegaConf.to_container(x),
-            lambda data: OmegaConf.create(data),
-        )
+            lambda x: OmegaConf.create(x),
+        ),
+        CLIPTextConfig: (
+            lambda x: x.to_diff_dict(),
+            lambda x: CLIPTextConfig(**x),
+        ),
     },
     library_name="cube",
     repo_url="https://github.com/Roblox/cube",
 ):
     def __init__(
         self,
-        config_path: Union[str, DictConfig],
+        config_path: Union[str] = None,
         gpt_ckpt_path: Optional[str] = None,
         shape_ckpt_path: Optional[str] = None,
         device: torch.device = torch.device(
             "cuda" if torch.cuda.is_available() else "cpu"
         ),
+        cfg: DictConfig = None,
         clip_config: CLIPTextConfig = None,
     ):
         """
@@ -54,9 +59,10 @@ class Engine(
             max_id (int): Maximum ID for the shape model codes.
         """
         super().__init__()
-        if isinstance(config_path, str):
-            config_path = load_config(config_path)
-        self.cfg = config_path
+        if config_path is not None:
+            self.cfg = load_config(config_path)
+        else:
+            self.cfg = cfg
         self.device = device
 
         self.gpt_model = DualStreamRoformer(
