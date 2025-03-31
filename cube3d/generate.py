@@ -5,6 +5,7 @@ import torch
 import trimesh
 
 from cube3d.inference.engine import Engine, EngineFast
+from cube3d.inference.utils import select_device
 from cube3d.mesh_utils.postprocessing import (
     PYMESHLAB_AVAILABLE,
     create_pymeshset,
@@ -112,11 +113,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
-    device = (
-        torch.device("cuda") if torch.cuda.is_available()
-        else torch.device("mps") if torch.backends.mps.is_available()
-        else torch.device("cpu")
-    )
+    device = select_device()
     print(f"Using device: {device}")
     # Initialize engine based on fast_inference flag
     if args.fast_inference:

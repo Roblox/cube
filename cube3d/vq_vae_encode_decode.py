@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import trimesh
 
-from cube3d.inference.utils import load_config, load_model_weights, parse_structured
+from cube3d.inference.utils import load_config, load_model_weights, parse_structured, select_device
 from cube3d.model.autoencoder.one_d_autoencoder import OneDAutoEncoder
 
 MESH_SCALE = 0.96
@@ -125,11 +125,7 @@ if __name__ == "__main__":
         help="Path to save the recovered mesh file.",
     )
     args = parser.parse_args()
-    device = (
-        torch.device("cuda") if torch.cuda.is_available()
-        else torch.device("mps") if torch.backends.mps.is_available()
-        else torch.device("cpu")
-    )
+    device = select_device()
     logging.info(f"Using device: {device}")
 
     cfg = load_config(args.config_path)
