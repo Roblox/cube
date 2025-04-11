@@ -54,3 +54,16 @@ def load_model_weights(model: torch.nn.Module, ckpt_path: str) -> None:
     )
 
     load_model(model, ckpt_path)
+
+def select_device() -> Any:
+    """
+    Selects the appropriate PyTorch device for tensor allocation.
+    
+    Returns:
+        Any: The `torch.device` object.
+    """
+    return torch.device(
+        "cuda" if torch.cuda.is_available()
+        else "mps" if torch.backends.mps.is_available()
+        else "cpu"
+    )
