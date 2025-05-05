@@ -194,7 +194,7 @@ class Engine:
                 embed.device,
             )
         with torch.autocast(self.device.type, dtype=torch.bfloat16):
-            for i in tqdm(range(self.max_new_tokens), desc=f"generating"):
+            for i in tqdm(range(self.max_new_tokens), desc="generating"):
                 curr_pos_id = torch.tensor([i], dtype=torch.long, device=embed.device)
                 logits = self.gpt_model(
                     embed_buffer,
@@ -276,7 +276,7 @@ class Engine:
             guidance_scale (float, optional): The scale of guidance for the GPT model. Default is 3.0.
             resolution_base (float, optional): The base resolution for the shape decoder. Default is 8.0.
             chunk_size (int, optional): The chunk size for processing the shape decoding. Default is 100,000.
-            top_p (float, optional): The cumulative probability threshold for nucleus sampling. 
+            top_p (float, optional): The cumulative probability threshold for nucleus sampling.
                                     If None, argmax selection is performed (deterministic generation). Otherwise, smallest set of tokens with cumulative probability ≥ top_p are kept (stochastic generation).
         Returns:
             mesh_v_f: The generated 3D mesh vertices and faces.
@@ -304,9 +304,9 @@ class EngineFast(Engine):
             device (torch.device): The device to run the inference on (e.g., CPU or CUDA).
         """
 
-        assert (
-            device.type == "cuda"
-        ), "EngineFast is only supported on cuda devices, please use Engine on non-cuda devices"
+        assert device.type == "cuda", (
+            "EngineFast is only supported on cuda devices, please use Engine on non-cuda devices"
+        )
 
         super().__init__(config_path, gpt_ckpt_path, shape_ckpt_path, device)
 
@@ -428,11 +428,11 @@ class EngineFast(Engine):
         )
 
     def run_gpt(
-        self, 
-        prompts: list[str], 
-        use_kv_cache: bool, 
+        self,
+        prompts: list[str],
+        use_kv_cache: bool,
         guidance_scale: float = 3.0,
-        top_p: float = None
+        top_p: float = None,
     ):
         """
         Runs the GPT model to generate text based on the provided prompts.
@@ -479,9 +479,7 @@ class EngineFast(Engine):
             next_embed = next_embed.repeat(2, 1, 1)
             self.embed_buffer[:, input_seq_len, :].copy_(next_embed.squeeze(1))
 
-            for i in tqdm(
-                range(1, self.max_new_tokens), desc=f"generating"
-            ):
+            for i in tqdm(range(1, self.max_new_tokens), desc="generating"):
                 self._set_curr_pos_id(i)
                 self.graph.replay()
 

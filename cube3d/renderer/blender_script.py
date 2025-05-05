@@ -556,7 +556,7 @@ def enable_gpus(device_type, use_cpus=False):
         if device_type == "CPU":
             return []
         else:
-            raise RuntimeError(f"No devices detected, set use_cpus to True")
+            raise RuntimeError("No devices detected, set use_cpus to True")
 
     assert device_type in [
         "CUDA",
