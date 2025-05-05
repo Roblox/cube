@@ -163,6 +163,32 @@ If you find this work helpful, please consider citing our technical report:
 }
 ```
 
+## Contributing
+
+We welcome contributions to Cube! Here's how you can set up your development environment and follow our code style guidelines:
+
+### Development Setup
+
+1. Clone the repository and install development dependencies:
+
+```bash
+git clone https://github.com/Roblox/cube.git
+cd cube
+pip install -e ".[dev]"
+```
+
+### Code Formatting and Linting
+
+We use [ruff](https://github.com/astral-sh/ruff) for both code formatting and linting to maintain consistent code style and quality.
+
+To run the formatter and linter:
+
+```bash
+./format.sh
+```
+
+Please format your code before submitting pull requests.
+
 ## Acknowledgements
 
 We would like to thank the contributors of [TRELLIS](https://github.com/microsoft/TRELLIS), [CraftsMan3D](https://github.com/wyysf-98/CraftsMan3D), [threestudio](https://github.com/threestudio-project/threestudio), [Hunyuan3D-2](https://github.com/Tencent/Hunyuan3D-2), [minGPT](https://github.com/karpathy/minGPT), [dinov2](https://github.com/facebookresearch/dinov2), [OptVQ](https://github.com/zbr17/OptVQ), [1d-tokenizer](https://github.com/bytedance/1d-tokenizer)
