@@ -1,5 +1,4 @@
-import logging
-from typing import Any, Optional
+from typing import Any
 
 import torch
 from omegaconf import DictConfig, OmegaConf

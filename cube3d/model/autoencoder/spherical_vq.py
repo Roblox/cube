@@ -1,4 +1,3 @@
-import sys
 from typing import Literal, Optional
 
 import torch
@@ -62,7 +61,6 @@ class SphericalVectorQuantizer(nn.Module):
         return self.norm(self.cb_norm(self.codebook.weight))
 
     @torch.no_grad()
-
     def lookup_codebook(self, q: torch.Tensor):
         """
         Perform a lookup in the codebook and process the result.

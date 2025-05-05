@@ -1,5 +1,4 @@
 import logging
-import sys
 from dataclasses import dataclass, field
 from functools import partial
 from typing import List, Optional, Tuple
@@ -632,7 +631,7 @@ class OneDAutoEncoder(nn.Module):
 
         progress_bar = tqdm(
             range(0, xyz_samples.shape[0], chunk_size),
-            desc=f"extracting geometry",
+            desc="extracting geometry",
             unit="chunk",
         )
         for start in progress_bar:
