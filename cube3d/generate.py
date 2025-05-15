@@ -14,6 +14,7 @@ from cube3d.mesh_utils.postprocessing import (
 )
 from cube3d.renderer import renderer
 
+
 def generate_mesh(
     engine,
     prompt,
@@ -128,7 +129,7 @@ if __name__ == "__main__":
         engine = Engine(
             args.config_path, args.gpt_ckpt_path, args.shape_ckpt_path, device=device
         )
-    
+
     # Generate meshes based on input source
     obj_path = generate_mesh(
         engine,

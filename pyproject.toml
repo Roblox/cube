@@ -30,9 +30,30 @@ dependencies = [
 ]
 [project.optional-dependencies]
 meshlab = ["pymeshlab"]
-lint = ["ruff==0.9.10"]
+dev = ["ruff==0.9.10"]
 
 [tool.setuptools.packages.find]
 where = ["cube3d"]
 include = ["cube/*"]
 namespaces = false
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+exclude = [
+    ".git",
+    ".ruff_cache",
+    ".venv",
+    "build",
+    "dist",
+    "*.ipynb"
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint]
+ignore = ["E741", "E722"]

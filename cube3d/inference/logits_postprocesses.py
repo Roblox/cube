@@ -30,9 +30,9 @@ def top_p_filtering(logits, top_p: float = 1.0):
 
 
 def process_logits(
-        logits,
-        top_p: float = None,
-    ):
+    logits,
+    top_p: float = None,
+):
     """
     Process logits by optionally applying nucleus (top-p) filtering and token selection.
 
