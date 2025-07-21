@@ -1,9 +1,16 @@
 import logging
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 
 import torch
 from omegaconf import DictConfig, OmegaConf
 from safetensors.torch import load_model
+
+BOUNDING_BOX_MAX_SIZE = 1.925
+
+
+def normalize_bbox(bounding_box_xyz: Tuple[float]):
+    max_l = max(bounding_box_xyz)
+    return [BOUNDING_BOX_MAX_SIZE * elem / max_l for elem in bounding_box_xyz]
 
 
 def load_config(cfg_path: str) -> Any:
@@ -49,21 +56,24 @@ def load_model_weights(model: torch.nn.Module, ckpt_path: str) -> None:
     Returns:
         None
     """
-    assert ckpt_path.endswith(".safetensors"), (
-        f"Checkpoint path '{ckpt_path}' is not a safetensors file"
-    )
+    assert ckpt_path.endswith(
+        ".safetensors"
+    ), f"Checkpoint path '{ckpt_path}' is not a safetensors file"
 
     load_model(model, ckpt_path)
+
 
 def select_device() -> Any:
     """
     Selects the appropriate PyTorch device for tensor allocation.
-    
+
     Returns:
         Any: The `torch.device` object.
     """
     return torch.device(
-        "cuda" if torch.cuda.is_available()
-        else "mps" if torch.backends.mps.is_available()
+        "cuda"
+        if torch.cuda.is_available()
+        else "mps"
+        if torch.backends.mps.is_available()
         else "cpu"
     )

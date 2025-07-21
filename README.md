@@ -7,7 +7,7 @@
 <div align="center">
   <a href=https://corp.roblox.com/newsroom/2025/03/introducing-roblox-cube target="_blank"><img src=https://img.shields.io/badge/Roblox-Blog-000000.svg?logo=Roblox height=22px></a>
   <a href=https://arxiv.org/abs/2503.15475 target="_blank"><img src=https://img.shields.io/badge/ArXiv-Report-b5212f.svg?logo=arxiv height=22px></a>
-  <a href=https://huggingface.co/Roblox/cube3d-0.1 target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Models-d96902.svg height=22px></a>
+  <a href=https://huggingface.co/Roblox/cube3d-v0.5 target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Models-d96902.svg height=22px></a>
   <a href=https://huggingface.co/spaces/Roblox/cube3d-interactive target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Demo-blue.svg height=22px></a>
   <a href=https://colab.research.google.com/drive/1ZvTj49pjDCD_crX5WPZNTAoTTzL6-E5t target="_blank"><img src=https://img.shields.io/badge/Colab-Demo-blue.svg?logo=googlecolab height=22px></a>
 </div>
@@ -20,18 +20,43 @@ of a Roblox experience, from generating 3D objects and scenes to rigging charact
 producing programmatic scripts describing object behaviors. As we start open-sourcing a family of models 
 towards this vision, we hope to engage others in the research community to address these goals with us.
 
-## Get Started with Cube 3D
-
+## July 2025 Update: Cube 3D v0.5 ✨
+With the v0.5 model, we introduce two upgrades to the auto-regressive base model for 3D geometry generation from text: *higher fidelity 3D compositions* and *bounding box conditioning*.
+The example gif below shows the model's capacity to generate 3D shapes capturing mixtures of concepts expressed in text, for example *mechanical lobster with mechanical tank treads*. The v0.5 model also shows significantly better text adherence, for example the *lowpoly paper craft victorian rabbit*.  
 <p align="center">
-  <img src="./resources/greyscale_512.gif" width="600" style="margin: 5px;">
+  <img src="./resources/3d_composition.gif" width="100%" style="margin: 5px;">
 </p>
 
-Cube 3D is our first step towards 3D intelligence, which involves a shape tokenizer and a text-to-shape generation model. We are unlocking the power of generating 3D assets and enhancing creativity for all artists. Our latest version of Cube 3D is now accessible to individuals, creators, researchers and businesses of all sizes so that they can experiment, innovate and scale their ideas responsibly. This release includes model weights and starting code for using our text-to-shape model to create 3D assets.
+With bounding box conditioning, we observe novel 3D generations where the model balances between the two conditioning inputs -- text prompt and global aspect ratio. In the gif below, notice how the model creatively interprets the the *seashell* or *tall pagoda* prompts into distinct 3D shapes. The model sometimes struggles when the bounding box is too extreme for a given prompt, for example the *cat*, where it can produce disconnected components or generates it along a diagonal to fit the bounding box constraints.
+<p align="center">
+  <img src="./resources/bbox_conditioning.gif" width="100%" style="margin: 5px;">
+</p>
+
+For a technical overview of the methods behind these two improvements, please see our latest report on arXiv. The latest training used an additional 3 million synthetic 3D assets. We introduced several refinements to VQ-VAE architecture and training procedures, and increased the VQ-VAE latent length from 512 to 1024 to increase generation fidelity. 
 
 ### Try it out on 
-
-- [Google Colab](https://colab.research.google.com/drive/1ZvTj49pjDCD_crX5WPZNTAoTTzL6-E5t)
 - [Hugging Face Interactive Demo](https://huggingface.co/spaces/Roblox/cube3d-interactive)
+- [Google Colab](https://colab.research.google.com/drive/1ZvTj49pjDCD_crX5WPZNTAoTTzL6-E5t)
+
+### Updated CLI Inference
+Please follow the [install instructions](#install-requirements) below (from v0.1) to clone and install the repo. The main changes are new model weights, config (under ```./cube3d/config/```) and new args for specifying bounding box. We currently default to the v0.5 config that supports bounding box.
+To generate 3D models using the downloaded models simply run:
+
+```bash
+python -m cube3d.generate \
+            --gpt-ckpt-path model_weights/shape_gpt.safetensors \
+            --shape-ckpt-path model_weights/shape_tokenizer.safetensors \
+            --fast-inference \
+            --prompt "A tall pagoda" \
+            --bounding-box-xyz 1.0 2.0 1.5
+```
+> **Note**: `--fast-inference` is optional and may not be available for all GPU that have limited VRAM. This flag will also not work on MacOS. 
+
+The output will be an `.obj` file saved in the specified `output` directory.
+
+## March 2025 Launch: Cube 3D v0.1
+
+Cube 3D is our first step towards 3D intelligence, which involves a shape tokenizer and a text-to-shape generation model. We are unlocking the power of generating 3D assets and enhancing creativity for all artists. Our latest version of Cube 3D is now accessible to individuals, creators, researchers and businesses of all sizes so that they can experiment, innovate and scale their ideas responsibly. This release includes model weights and starting code for using our text-to-shape model to create 3D assets.
 
 ### Install Requirements
 
@@ -51,11 +76,11 @@ pip install -e .[meshlab]
 
 ### Download Models from Huggingface 🤗
 
-Download the model weights from [hugging face](https://huggingface.co/Roblox/cube3d-v0.1) or use the
+Download the model weights from [hugging face](https://huggingface.co/Roblox/cube3d-v0.5) or use the
 `huggingface-cli`:
 
 ```bash
-huggingface-cli download Roblox/cube3d-v0.1 --local-dir ./model_weights
+huggingface-cli download Roblox/cube3d-v0.5 --local-dir ./model_weights
 ```
 
 ### Inference
@@ -100,9 +125,9 @@ This will process the `.obj` file located at `./outputs/output.obj` and prints t
 ### Hardware Requirements
 
 We have tested our model on:
+* Nvidia L40S GPU
 * Nvidia H100 GPU
 * Nvidia A100 GPU
-* Nvidia Geforce 3080
 * Apple Silicon M2-4 Chips.
 
 We recommend using a GPU with at least 24GB of VRAM available when using `--fast-inference` (or `EngineFast`) and 16GB otherwise. 
@@ -139,19 +164,10 @@ vertices, faces = mesh_v_f[0][0], mesh_v_f[0][1]
 _ = trimesh.Trimesh(vertices=vertices, faces=faces).export("output.obj")
 ```
 
-## Coming Soon
+## Upcoming Features
+- Texture generation
+- Scene layout generation
 
-### Controlling shape generation with bounding box conditioning
-<div align="center">
-  <img src="./resources/truck_black_text_512.gif" width="300" height="300" style="margin: 5px;">
-  <img src="./resources/couch_black_text_512.gif" width="300" height="300" style="margin: 5px;">
-</div>
-
-### Scene Generation
-
-https://github.com/user-attachments/assets/987c459a-5708-41a5-9b92-89068a70a239
-
-https://github.com/user-attachments/assets/ab501a86-b0cb-4c73-827e-988b2120d4c0
 
 ## Citation
 If you find this work helpful, please consider citing our technical report:

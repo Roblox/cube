@@ -1,0 +1,33 @@
+gpt_model:
+  n_layer: 23
+  n_single_layer: 1
+  rope_theta: 10000
+  n_head: 12
+  n_embd: 1536
+  bias: true
+  eps: 1.e-6
+  shape_model_vocab_size: 16384
+  text_model_embed_dim: 768
+  use_pooled_text_embed: False
+  shape_model_embed_dim: 32
+  encoder_with_cls_token: true
+  use_bbox: true
+
+shape_model:
+  encoder_with_cls_token: true
+  num_encoder_latents: 1024 
+  num_decoder_latents: 0 
+  embed_dim: 32
+  width: 768
+  num_heads: 12
+  out_dim: 1
+  eps: 1.e-6 
+  num_freqs: 128 
+  point_feats: 3 
+  embed_point_feats: false
+  num_encoder_layers: 13
+  encoder_cross_attention_levels: [0, 2, 4, 8] 
+  num_decoder_layers: 24
+  num_codes: 16384
+
+text_model_pretrained_model_name_or_path: "openai/clip-vit-large-patch14"

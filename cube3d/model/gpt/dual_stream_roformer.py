@@ -34,6 +34,8 @@ class DualStreamRoformer(nn.Module):
 
         encoder_with_cls_token: bool = True
 
+        use_bbox: bool = False
+
     def __init__(self, cfg: Config) -> None:
         """
         Initializes the DualStreamRoFormer model.
@@ -107,6 +109,9 @@ class DualStreamRoformer(nn.Module):
         )
 
         self.lm_head = nn.Linear(self.cfg.n_embd, self.vocab_size, bias=False)
+
+        if self.cfg.use_bbox:
+            self.bbox_proj = nn.Linear(3, self.cfg.n_embd)
 
     def encode_text(self, text_embed):
         """

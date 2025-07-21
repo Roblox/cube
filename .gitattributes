@@ -1,0 +1,2 @@
+resources/3d_composition.gif filter=lfs diff=lfs merge=lfs -text
+resources/bbox_conditioning.gif filter=lfs diff=lfs merge=lfs -text

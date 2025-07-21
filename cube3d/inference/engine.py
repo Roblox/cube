@@ -1,3 +1,5 @@
+from typing import Optional, Tuple
+
 import torch
 from tqdm import tqdm
 from transformers import CLIPTextModelWithProjection, CLIPTokenizerFast
@@ -77,12 +79,54 @@ class Engine:
         self.max_id = self.shape_model.cfg.num_codes
 
     @torch.inference_mode()
-    def prepare_inputs(self, prompts: list[str], guidance_scale: float):
+    def prepare_conditions_with_bbox(
+        self,
+        cond: torch.Tensor,
+        bounding_box_tensor: Optional[torch.Tensor] = None,
+    ):
+        """
+        Prepares condition embeddings by incorporating bounding box information.
+
+        Concatenates bounding box embeddings to the existing condition tensor if the model
+        supports bounding box projection. If no bounding box is provided, uses zero padding.
+
+        Args:
+            cond (torch.Tensor): The input condition embeddings tensor of shape (B, seq_len, dim).
+            bounding_box_xyz (Optional[torch.Tensor], optional): The size of the bounding box
+                as (x, y, z) dimensions represented as a tensor. If None, uses zero padding for
+                bounding box embeddings.
+
+        Returns:
+            torch.Tensor: The condition tensor with bounding box embeddings concatenated along
+                the sequence dimension if bounding box projection is supported, otherwise
+                returns the original condition tensor unchanged.
+        """
+        if not hasattr(self.gpt_model, "bbox_proj"):
+            return cond
+
+        if bounding_box_tensor is None:
+            B = cond.shape[0]
+            bounding_box_tensor = torch.zeros((B, 3), dtype=cond.dtype, device=self.device)
+
+        bbox_emb = self.gpt_model.bbox_proj(bounding_box_tensor).unsqueeze(dim=1)
+        cond = torch.cat([cond, bbox_emb], dim=1)
+        return cond
+
+    @torch.inference_mode()
+    def prepare_inputs(
+        self,
+        prompts: list[str],
+        guidance_scale: float,
+        bounding_box_xyz: Optional[Tuple[float]] = None,
+    ):
         """
         Prepares the input embeddings for the model based on the provided prompts and guidance scale.
         Args:
             prompts (list[str]): A list of prompt strings to be encoded.
             guidance_scale (float): A scaling factor for guidance. If greater than 0.0, additional processing is applied.
+            bounding_box_xyz (Optional[Tuple[float]], optional): The size of the bounding box for generation
+                as (x, y, z) dimensions. Each value must be between 0 and 1.925. If None,
+                uses default bounding box sizing.
         Returns:
             tuple: A tuple containing:
                 - embed (torch.Tensor): The encoded input embeddings.
@@ -94,11 +138,19 @@ class Engine:
         with torch.autocast(self.device.type, dtype=torch.bfloat16):
             embed = self.encode_input(prompt_embeds, self.gpt_model.shape_bos_id)
 
-        cond = prompt_embeds
+        if bounding_box_xyz is not None:
+            cond_bbox = torch.atleast_2d(torch.tensor(bounding_box_xyz)).to(self.device)
+            uncond_bbox = torch.zeros_like(cond_bbox).to(self.device)
+        else:
+            cond_bbox = None
+            uncond_bbox = None
+
+        cond = self.prepare_conditions_with_bbox(prompt_embeds, cond_bbox)
         if guidance_scale > 0.0:
             embed = torch.cat([embed, embed], dim=0)
             uncond_embeds = self.run_clip([""] * len(prompts))
-            cond = torch.cat([prompt_embeds, uncond_embeds], dim=0)
+            uncond = self.prepare_conditions_with_bbox(uncond_embeds, uncond_bbox)
+            cond = torch.cat([cond, uncond], dim=0)
 
         return embed, cond
 
@@ -161,6 +213,7 @@ class Engine:
         use_kv_cache: bool,
         guidance_scale: float = 3.0,
         top_p: float = None,
+        bounding_box_xyz: Optional[Tuple[float]] = None,
     ):
         """
         Generates text using a GPT model based on the provided prompts.
@@ -169,11 +222,14 @@ class Engine:
             use_kv_cache (bool): Whether to use key-value caching for faster generation.
             guidance_scale (float, optional): The scale for guidance during generation. Default is 3.0.
             top_p (float, optional): The cumulative probability threshold for nucleus sampling.
-            If None, argmax selection is performed (deterministic generation). Otherwise, smallest set of tokens with cumulative probability ≥ top_p are kept (stochastic generation).
+                If None, argmax selection is performed (deterministic generation). Otherwise, smallest set of tokens with cumulative probability ≥ top_p are kept (stochastic generation).
+            bounding_box_xyz (Optional[Tuple[float]], optional): The size of the bounding box for generation
+                as (x, y, z) dimensions. Each value must be between 0 and 1.925. If None,
+                uses default bounding box sizing.
         Returns:
             torch.Tensor: A tensor containing the generated token IDs.
         """
-        embed, cond = self.prepare_inputs(prompts, guidance_scale)
+        embed, cond = self.prepare_inputs(prompts, guidance_scale, bounding_box_xyz)
 
         output_ids = []
 
@@ -267,6 +323,7 @@ class Engine:
         resolution_base: float = 8.0,
         chunk_size: int = 100_000,
         top_p: float = None,
+        bounding_box_xyz: Optional[Tuple[float]] = None,
     ):
         """
         Generates a 3D mesh from text prompts using a GPT model and shape decoder.
@@ -276,12 +333,17 @@ class Engine:
             guidance_scale (float, optional): The scale of guidance for the GPT model. Default is 3.0.
             resolution_base (float, optional): The base resolution for the shape decoder. Default is 8.0.
             chunk_size (int, optional): The chunk size for processing the shape decoding. Default is 100,000.
-            top_p (float, optional): The cumulative probability threshold for nucleus sampling. 
-                                    If None, argmax selection is performed (deterministic generation). Otherwise, smallest set of tokens with cumulative probability ≥ top_p are kept (stochastic generation).
+            top_p (float, optional): The cumulative probability threshold for nucleus sampling.
+                If None, argmax selection is performed (deterministic generation). Otherwise, smallest set of tokens with cumulative probability ≥ top_p are kept (stochastic generation).
+            bounding_box_xyz (Tuple[float] | None, optional): The size of the bounding box for the generated mesh
+                as (x, y, z) dimensions. Each value must be between 0 and 1.925. If None,
+                uses default bounding box sizing.
         Returns:
             mesh_v_f: The generated 3D mesh vertices and faces.
         """
-        output_ids = self.run_gpt(prompts, use_kv_cache, guidance_scale, top_p)
+        output_ids = self.run_gpt(
+            prompts, use_kv_cache, guidance_scale, top_p, bounding_box_xyz
+        )
         with torch.autocast(self.device.type, dtype=torch.bfloat16):
             mesh_v_f = self.run_shape_decode(output_ids, resolution_base, chunk_size)
         return mesh_v_f
@@ -428,11 +490,12 @@ class EngineFast(Engine):
         )
 
     def run_gpt(
-        self, 
-        prompts: list[str], 
-        use_kv_cache: bool, 
+        self,
+        prompts: list[str],
+        use_kv_cache: bool,
         guidance_scale: float = 3.0,
-        top_p: float = None
+        top_p: float = None,
+        bounding_box_xyz: Optional[Tuple[float]] = None,
     ):
         """
         Runs the GPT model to generate text based on the provided prompts.
@@ -441,14 +504,18 @@ class EngineFast(Engine):
             use_kv_cache (bool): Flag indicating whether to use key-value caching. (Currently not used)
             guidance_scale (float, optional): The scale factor for guidance. Default is 3.0.
             top_p (float, optional): The cumulative probability threshold for nucleus sampling.
-            If None, argmax selection is performed. Otherwise, smallest set of tokens with cumulative probability ≥ top_p are kept.
+                If None, argmax selection is performed. Otherwise, smallest
+                set of tokens with cumulative probability ≥ top_p are kept.
+            bounding_box_xyz (Tuple[float] | None, optional): The size of the bounding box for the generated mesh
+                as (x, y, z) dimensions. Each value must be between 0 and 1.925. If None,
+                uses default bounding box sizing.
         Returns:
             torch.Tensor: A tensor containing the generated output token IDs.
         Raises:
             AssertionError: If the batch size is greater than 1.
         """
 
-        embed, cond = self.prepare_inputs(prompts, guidance_scale)
+        embed, cond = self.prepare_inputs(prompts, guidance_scale, bounding_box_xyz)
         assert len(prompts) == 1, "batch size > 1 not support for EngineFast"
 
         batch_size, input_seq_len, _ = embed.shape
@@ -479,9 +546,7 @@ class EngineFast(Engine):
             next_embed = next_embed.repeat(2, 1, 1)
             self.embed_buffer[:, input_seq_len, :].copy_(next_embed.squeeze(1))
 
-            for i in tqdm(
-                range(1, self.max_new_tokens), desc=f"generating"
-            ):
+            for i in tqdm(range(1, self.max_new_tokens), desc=f"generating"):
                 self._set_curr_pos_id(i)
                 self.graph.replay()
 
