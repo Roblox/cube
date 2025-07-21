@@ -32,7 +32,7 @@ With bounding box conditioning, we observe novel 3D generations where the model 
   <img src="./resources/bbox_conditioning.gif" width="100%" style="margin: 5px;">
 </p>
 
-For a technical overview of the methods behind these two improvements, please see our latest report on arXiv. The latest training used an additional 3 million synthetic 3D assets. We introduced several refinements to VQ-VAE architecture and training procedures, and increased the VQ-VAE latent length from 512 to 1024 to increase generation fidelity. 
+For a technical overview of the methods behind these two improvements, please refer to our latest v3 report on arXiv that will be updated soon. The latest model was trained on an additional ~2.8 million synthetic 3D assets. We introduced several refinements to VQ-VAE architecture and training procedures, and increased the VQ-VAE latent length from 512 to 1024 to increase generation fidelity.
 
 ### Try it out on 
 - [Hugging Face Interactive Demo](https://huggingface.co/spaces/Roblox/cube3d-interactive)
