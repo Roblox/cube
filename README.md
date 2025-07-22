@@ -27,12 +27,12 @@ The example gif below shows the model's capacity to generate 3D shapes capturing
   <img src="./resources/3d_composition.gif" width="100%" style="margin: 5px;">
 </p>
 
-With bounding box conditioning, we observe novel 3D generations where the model balances between the two conditioning inputs -- text prompt and global aspect ratio. In the gif below, notice how the model creatively interprets the the *seashell* or *tall pagoda* prompts into distinct 3D shapes. The model sometimes struggles when the bounding box is too extreme for a given prompt, for example the *cat*, where it can produce disconnected components or generates it along a diagonal to fit the bounding box constraints.
+With bounding box conditioning, we observe novel 3D generations where the model balances between the two conditioning inputs -- text prompt and global aspect ratio. In the gif below, notice how the model creatively interprets the *seashell* or *tall pagoda* prompts into distinct 3D shapes. The model sometimes struggles when the bounding box is too extreme for a given prompt, for example the *cat*, where it can produce disconnected components or generates it along a diagonal to fit the bounding box constraints.
 <p align="center">
   <img src="./resources/bbox_conditioning.gif" width="100%" style="margin: 5px;">
 </p>
 
-For a technical overview of the methods behind these two improvements, please refer to our latest v3 report on arXiv that will be updated soon. The latest model was trained on an additional ~2.8 million synthetic 3D assets. We introduced several refinements to VQ-VAE architecture and training procedures, and increased the VQ-VAE latent length from 512 to 1024 to increase generation fidelity.
+For a technical overview of the methods behind these two improvements, please refer to our latest <a href=https://arxiv.org/abs/2503.15475 target="_blank">v3 report on arXiv</a>. The latest model was trained on an additional ~2.8 million synthetic 3D assets. We introduced several refinements to VQ-VAE architecture and training procedures, and increased the VQ-VAE latent length from 512 to 1024 to increase generation fidelity.
 
 ### Try it out on 
 - [Hugging Face Interactive Demo](https://huggingface.co/spaces/Roblox/cube3d-interactive)
