@@ -1,0 +1,20 @@
+torch>=2.4
+torchvision>=0.19
+diffusers>=0.30
+transformers>=4.45
+accelerate>=0.30
+huggingface-hub>=0.24,<1.0
+safetensors>=0.4
+omegaconf>=2.3
+numpy>=1.24
+scikit-image>=0.22
+trimesh>=4.0
+pillow>=10.0
+tqdm>=4.65
+einops>=0.7
+warp-lang>=1.4
+jaxtyping>=0.2
+typeguard>=4.0
+fpsample>=0.3
+# optional
+gradio>=4.0       # for examples/gradio_demo.py

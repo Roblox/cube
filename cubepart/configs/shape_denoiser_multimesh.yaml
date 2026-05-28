@@ -1,0 +1,36 @@
+# Multi-mesh (parts) shape diffusion.
+#
+# Used together with `PartShapeDenoiserPipeline` to generate one
+# latent per part, conditioned on text descriptions of the parts and
+# (optionally) a reference latent of the full mesh.
+
+system:
+  pretrained_model_path: null  # override via the pipeline
+
+  base_model_type: "Qwen/Qwen3-VL-4B-Instruct"
+  base_tokenizer_max_length: 192
+  base_padding_mode: "zeros"
+
+  diffusion_enable_mrope: true
+  diffusion_enable_shape_guidance: true
+
+  per_channel_shape_model_normalization: false
+
+  shape_model:
+    pretrained_model_path: null
+    num_encoder_latents: 1024
+
+    embed_dim: 64
+    adaptive_embed_dim: [256]
+
+    point_feats: 4
+    out_dim: 1
+    embed_type: "fourier"
+    num_freqs: 8
+    include_pi: false
+    num_heads: 16
+    width: 1024
+    num_encoder_layers: 9
+    num_decoder_layers: 16
+    dropout: 0.0
+    eps: 1.e-6
