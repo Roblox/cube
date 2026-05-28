@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cube_part"
+version = "0.1.0"
+description = "Inference pipeline for multi-part 3D shape decomposition with shape diffusion."
+authors = [{ name = "Roblox AI Cube" }]
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+  "torch>=2.4",
+  "torchvision>=0.19",
+  "diffusers>=0.30",
+  "transformers>=4.45",
+  "accelerate>=0.30",
+  "huggingface-hub>=0.24,<1.0",
+  "safetensors>=0.4",
+  "omegaconf>=2.3",
+  "numpy>=1.24",
+  "scikit-image>=0.22",
+  "trimesh>=4.0",
+  "pillow>=10.0",
+  "tqdm>=4.65",
+  "einops>=0.7",
+  "warp-lang>=1.4",
+  "jaxtyping>=0.2",
+  "typeguard>=4.0",
+  "fpsample>=0.3",
+]
+
+[project.optional-dependencies]
+demo = ["gradio>=4.0"]
+dev = ["pytest>=7", "ruff>=0.4"]
+
+[tool.setuptools]
+packages = { find = { include = ["cube_part*"] } }
+include-package-data = true
+
+[tool.setuptools.package-data]
+"cube_part" = ["**/*.yaml"]

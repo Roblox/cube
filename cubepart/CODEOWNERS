@@ -1,0 +1,9 @@
+# This is the codeowners file. It describes the people who must approve a code review
+# The first entry is a path filter for which things code owners will be required on.
+# To have a team, prefix it with Roblox/. Note that the team must have been added to the repo.
+# Multiple owners on one line will be an OR operation, as long as one approves the whole line is satisfied.
+# For more details: https://roblox.atlassian.net/wiki/spaces/ENGEFF/pages/1549927831/Using+CODEOWNERS+files
+
+# Default catch-all for anything that isn't more specifically owned.
+
+* @Roblox/aicube

@@ -1,0 +1,36 @@
+{
+    "jellyfish_car.glb": [
+        "body",
+        "front right wheel",
+        "front left wheel",
+        "rear right wheel",
+        "rear left wheel",
+        "exhaust pipe",
+        "headlights",
+        "gun"
+    ],
+    "drone.glb": [
+        "body",
+        "blades",
+        "landing legs"
+    ],
+    "wizard.glb": [
+        "head",
+        "feather",
+        "hat",
+        "torso body",
+        "cloak",
+        "hands",
+        "magic staff",
+        "orb"
+    ],
+    "pirate_chest.glb": [
+        "lid",
+        "base"
+    ],
+    "flower.glb": [
+        "flower stem",
+        "flower petals",
+        "leaves"
+    ]
+}
