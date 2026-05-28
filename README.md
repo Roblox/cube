@@ -20,6 +20,12 @@ of a Roblox experience, from generating 3D objects and scenes to rigging charact
 producing programmatic scripts describing object behaviors. As we start open-sourcing a family of models 
 towards this vision, we hope to engage others in the research community to address these goals with us.
 
+## May 2026 Update: CubePart
+We have released CubePart,  an **open-vocabulary, part-controllable** 3D generator. Given an input mesh and a user-defined parts schema, CubePart synthesizes a set of meshes—one per schema element—that assemble into a coherent object while respecting the
+specified semantic structure. The resulting assets can be directly integrated into game engines and driven by animation, physics, and behavior scripts without manual post-processing.
+
+Checkout more details [here](https://github.com/Roblox/cube/tree/cubepart/cubepart)!
+
 ## July 2025 Update: Cube 3D v0.5 ✨
 With the v0.5 model, we introduce two upgrades to the auto-regressive base model for 3D geometry generation from text: *higher fidelity 3D compositions* and *bounding box conditioning*.
 The example gif below shows the model's capacity to generate 3D shapes capturing mixtures of concepts expressed in text, for example *mechanical lobster with mechanical tank treads*. The v0.5 model also shows significantly better text adherence, for example the *lowpoly paper craft victorian rabbit*.  
