@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/bafcad1d-6846-4db3-b176-e079e2c84f32
 We have released CubePart,  an **open-vocabulary, part-controllable** 3D generator. Given an input mesh and a user-defined parts schema, CubePart synthesizes a set of meshes—one per schema element—that assemble into a coherent object while respecting the
 specified semantic structure. The resulting assets can be directly integrated into game engines and driven by animation, physics, and behavior scripts without manual post-processing.
 
-Check out more details [here](https://github.com/Roblox/cube/tree/cubepart/cubepart)!
+Check out more details [here](https://github.com/Roblox/cube/tree/main/cubepart)!
 
 ## July 2025 Update: Cube 3D v0.5 ✨
 With the v0.5 model, we introduce two upgrades to the auto-regressive base model for 3D geometry generation from text: *higher fidelity 3D compositions* and *bounding box conditioning*.
