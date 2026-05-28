@@ -4,14 +4,6 @@
   <img src="./resources/teaser.png" width="800" style="margin: 5px;">
 </p>
 
-<div align="center">
-  <a href=https://corp.roblox.com/newsroom/2025/03/introducing-roblox-cube target="_blank"><img src=https://img.shields.io/badge/Roblox-Blog-000000.svg?logo=Roblox height=22px></a>
-  <a href=https://arxiv.org/abs/2503.15475 target="_blank"><img src=https://img.shields.io/badge/ArXiv-Report-b5212f.svg?logo=arxiv height=22px></a>
-  <a href=https://huggingface.co/Roblox/cube3d-v0.5 target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Models-d96902.svg height=22px></a>
-  <a href=https://huggingface.co/spaces/Roblox/cube3d-interactive target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Demo-blue.svg height=22px></a>
-  <a href=https://colab.research.google.com/drive/1ZvTj49pjDCD_crX5WPZNTAoTTzL6-E5t target="_blank"><img src=https://img.shields.io/badge/Colab-Demo-blue.svg?logo=googlecolab height=22px></a>
-</div>
-
 
 Foundation models trained on vast amounts of data have demonstrated remarkable reasoning and
 generation capabilities in the domains of text, images, audio and video. Our goal is to build
@@ -22,6 +14,13 @@ towards this vision, we hope to engage others in the research community to addre
 
 ## May 2026 Update: CubePart 
 
+<div align="left">
+  <a href="https://cubepart.github.io/" target="_blank"><img src="https://img.shields.io/badge/Project-Page-1f6feb.svg" height="22px"></a>
+  <a href="#" target="_blank"><img src="https://img.shields.io/badge/ArXiv-Report-b5212f.svg?logo=arxiv" height="22px"></a>
+  <a href="https://huggingface.co/Roblox/cubepart" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Models-d96902.svg" height="22px"></a>
+  <a href="https://huggingface.co/spaces/Roblox/cubepart-demo" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Demo-blue.svg" height="22px"></a>
+</div>
+
 https://github.com/user-attachments/assets/bafcad1d-6846-4db3-b176-e079e2c84f32
 
 We have released CubePart,  an **open-vocabulary, part-controllable** 3D generator. Given an input mesh and a user-defined parts schema, CubePart synthesizes a set of meshes—one per schema element—that assemble into a coherent object while respecting the
@@ -30,6 +29,15 @@ specified semantic structure. The resulting assets can be directly integrated in
 Check out more details [here](https://github.com/Roblox/cube/tree/main/cubepart)!
 
 ## July 2025 Update: Cube 3D v0.5 ✨
+
+<div align="left">
+  <a href=https://corp.roblox.com/newsroom/2025/03/introducing-roblox-cube target="_blank"><img src=https://img.shields.io/badge/Roblox-Blog-000000.svg?logo=Roblox height=22px></a>
+  <a href=https://arxiv.org/abs/2503.15475 target="_blank"><img src=https://img.shields.io/badge/ArXiv-Report-b5212f.svg?logo=arxiv height=22px></a>
+  <a href=https://huggingface.co/Roblox/cube3d-v0.5 target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Models-d96902.svg height=22px></a>
+  <a href=https://huggingface.co/spaces/Roblox/cube3d-interactive target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Demo-blue.svg height=22px></a>
+  <a href=https://colab.research.google.com/drive/1ZvTj49pjDCD_crX5WPZNTAoTTzL6-E5t target="_blank"><img src=https://img.shields.io/badge/Colab-Demo-blue.svg?logo=googlecolab height=22px></a>
+</div>
+
 With the v0.5 model, we introduce two upgrades to the auto-regressive base model for 3D geometry generation from text: *higher fidelity 3D compositions* and *bounding box conditioning*.
 The example gif below shows the model's capacity to generate 3D shapes capturing mixtures of concepts expressed in text, for example *mechanical lobster with mechanical tank treads*. The v0.5 model also shows significantly better text adherence, for example the *lowpoly paper craft victorian rabbit*.  
 <p align="center">
@@ -64,6 +72,14 @@ python -m cube3d.generate \
 The output will be an `.obj` file saved in the specified `output` directory.
 
 ## March 2025 Launch: Cube 3D v0.1
+
+<div align="left">
+  <a href=https://corp.roblox.com/newsroom/2025/03/introducing-roblox-cube target="_blank"><img src=https://img.shields.io/badge/Roblox-Blog-000000.svg?logo=Roblox height=22px></a>
+  <a href=https://arxiv.org/abs/2503.15475 target="_blank"><img src=https://img.shields.io/badge/ArXiv-Report-b5212f.svg?logo=arxiv height=22px></a>
+  <a href=https://huggingface.co/Roblox/cube3d-v0.5 target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Models-d96902.svg height=22px></a>
+  <a href=https://huggingface.co/spaces/Roblox/cube3d-interactive target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Demo-blue.svg height=22px></a>
+  <a href=https://colab.research.google.com/drive/1ZvTj49pjDCD_crX5WPZNTAoTTzL6-E5t target="_blank"><img src=https://img.shields.io/badge/Colab-Demo-blue.svg?logo=googlecolab height=22px></a>
+</div>
 
 Cube 3D is our first step towards 3D intelligence, which involves a shape tokenizer and a text-to-shape generation model. We are unlocking the power of generating 3D assets and enhancing creativity for all artists. Our latest version of Cube 3D is now accessible to individuals, creators, researchers and businesses of all sizes so that they can experiment, innovate and scale their ideas responsibly. This release includes model weights and starting code for using our text-to-shape model to create 3D assets.
 
