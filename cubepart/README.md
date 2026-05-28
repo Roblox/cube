@@ -34,6 +34,40 @@ pip install -e .
 pip install -r requirements.txt
 ```
 
+### ROCm / AMD GPU installation
+
+CubePart can also run in a ROCm PyTorch environment. The example below was
+tested with an AMD Instinct MI300X GPU on ROCm 6.4.3 using the official PyTorch
+ROCm container.
+
+```bash
+docker run --rm -it \
+    --device=/dev/kfd --device=/dev/dri --group-add video \
+    --ipc=host --shm-size=96G \
+    -v "$PWD":"$PWD" -w "$PWD/cubepart" \
+    rocm/pytorch:rocm6.4.3_ubuntu24.04_py3.12_pytorch_release_2.6.0 \
+    bash
+```
+
+Inside the container, keep the ROCm-enabled `torch` and `torchvision` wheels
+from the image, then install the ROCm helper requirements and the package:
+
+```bash
+pip install -r requirements_rocm.txt
+pip install "fpsample>=0.3" --no-build-isolation
+pip install -e . --no-build-isolation
+```
+
+If you use the repository example meshes, make sure Git LFS assets are present:
+
+```bash
+git lfs pull --include="cubepart/examples/inputs/jellyfish_car.glb"
+```
+
+ROCm note: `warp-lang` may not detect AMD GPUs as CUDA devices. In that case,
+geometry extraction can fall back to the CPU path and still export meshes, but
+this path is not expected to provide ROCm-native geometry extraction performance.
+
 ## Download model weights
 
 The pretrained checkpoints (multi-part DiT + shape VAE) are hosted on the
