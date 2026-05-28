@@ -4,7 +4,7 @@
   <a href="https://cubepart.github.io/" target="_blank"><img src="https://img.shields.io/badge/Project-Page-1f6feb.svg" height="22px"></a>
   <a href="#" target="_blank"><img src="https://img.shields.io/badge/ArXiv-Report-b5212f.svg?logo=arxiv" height="22px"></a>
   <a href="https://huggingface.co/Roblox/cubepart" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Models-d96902.svg" height="22px"></a>
-  <a href="#" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Demo-blue.svg" height="22px"></a>
+  <a href="https://huggingface.co/spaces/Roblox/cubepart-demo" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Demo-blue.svg" height="22px"></a>
 </div>
 
 <br/>
